@@ -1,4 +1,4 @@
 # example sample list
 # lines must consist of a filename with the full absolute path, followed by a tab/space and the sample name
-# your.sorted.and.indexed.bam sample_name
-test/example.bam example 
+# your.sorted.and.indexed.bam sample_name reference_name
+test/example.bam example hg19
