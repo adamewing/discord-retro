@@ -19,3 +19,11 @@ example .bam included (test/example.bam) with the following commandline:
 output will end up in test/output/example, the most relevant files are
 other.tab.txt and otherbreaks.tab.txt, the former contains the coordinates and
 annotations, the latter contains breakpoint information.
+
+Prerequisites:
+
+bwa (http://bio-bwa.sourceforge.net/)
+samtools (http://samtools.sourceforge.net/)
+tabix (http://samtools.sourceforge.net/tabix.shtml)
+pysam (http://code.google.com/p/pysam/)
+parallelpython (http://www.parallelpython.com/)
