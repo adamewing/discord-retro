@@ -1,4 +1,0 @@
-RepeatMasker	hg18.rmsk.bed.gz
-NonRefRtn	hg18.nonref.bed.gz
-GeneSymbol	hg18.genesymbol.bed.gz
-GeneExon	hg18.exons.bed.gz
