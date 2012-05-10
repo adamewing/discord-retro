@@ -1,0 +1,19 @@
+# list of repeat names and corresponding reference files
+# these reference sequences have 3' poly(A) sequences trimmed
+# to avoid ambiguity, 3' poly(A) sequences will align to POLYA.fa
+# unless more similar to another element
+ALU     ALU.fa
+AluYa5  AluYa5.fa
+AluYa8  AluYb8.fa
+L1HS    L1HS.fa
+L1PA2   L1PA2.fa
+L1PA3   L1PA3.fa
+L1PA4   L1PA4.fa
+POLYA   POLYA.fa
+SVA     SVA.fa
+SVA_A   SVA_A.fa
+SVA_B   SVA_B.fa
+SVA_C   SVA_C.fa
+SVA_D   SVA_D.fa
+SVA_E   SVA_E.fa
+SVA_F   SVA_F.fa

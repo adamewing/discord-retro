@@ -1,0 +1,8 @@
+LINE	6019
+SINE	282
+Other	2000
+LTR     950
+PTERV   950
+tRNA    200
+scRNA   200
+snRNA   228
