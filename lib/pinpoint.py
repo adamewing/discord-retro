@@ -6,14 +6,7 @@
 # Released under the MIT license, see LICENSE.txt
 #
 
-import re
-import os
-import subprocess
-import tempfile
-import pysam
-import sys
-import argparse
-import peakparser
+import re, os, subprocess, tempfile, pysam, sys, argparse, peakparser
 from string import maketrans
 
 def checkfile(fname):

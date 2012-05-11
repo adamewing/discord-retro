@@ -8,9 +8,7 @@
  configtest.py checks required configuration options and files
 """
 
-import ConfigParser
-import sys
-import os
+import ConfigParser, sys, os
 
 def checkfile(file):
     try:

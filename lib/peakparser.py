@@ -6,14 +6,7 @@
 # Released under the MIT license, see LICENSE.txt
 #
 
-import pysam
-import argparse
-import pairinfo
-import discordant
-import sys
-import os
-import math
-import logging
+import pysam, argparse, pairinfo, discordant, sys, os, math, logging
 
 # facilitates keeping reads from different element classes seperate
 class PeakBuilder:

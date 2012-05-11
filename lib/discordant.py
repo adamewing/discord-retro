@@ -6,13 +6,7 @@
 # Released under the MIT license, see LICENSE.txt
 #
 
-import pysam
-import argparse
-import sys
-import pairinfo
-import logging
-import os
-import re
+import pysam, argparse, sys, pairinfo, logging, os, re
 
 def checkfile(fname):
     try:

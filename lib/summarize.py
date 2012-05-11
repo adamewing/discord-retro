@@ -5,13 +5,7 @@
 # Released under the MIT license, see LICENSE.txt
 #
 
-import os
-import re
-import sys
-import peakparser
-import discordant
-import argparse
-import annotate
+import os, re, sys, peakparser, discordant, argparse, annotate
 
 class insertionSummary:
     def __init__(self):

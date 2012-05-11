@@ -6,9 +6,7 @@
  Released under the MIT license, see LICENSE.txt
 """
 
-import pysam
-import sys
-import re
+import pysam, sys, re
 
 def uniqann(annList):
     uniq = {}

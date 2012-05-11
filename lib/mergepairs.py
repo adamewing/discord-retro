@@ -1,11 +1,6 @@
 #!/bin/env python
 
-import logging
-import os
-import re
-import argparse
-import peakparser
-import discordant
+import logging, os, re, argparse, peakparser, discordant
 
 # +1 if a > b
 # -1 if a < b

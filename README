@@ -17,7 +17,7 @@ example .bam included (test/example.bam) with the following commandline:
 ./discord-retro.py -s samplelist_example.txt -c human_sample.cfg -o test/output
 
 in order for this to work, human_sample.cfg will have to be modified to assign
-'hg19' to a copy of hg19 that has been indexed by `bwa index -a stdsw`
+'hg19' to a copy of hg19 that has been indexed by `bwa index -a bwasw`
 
 output will end up in test/output/example, the most relevant files are
 other.tab.txt and otherbreaks.tab.txt, the former contains the coordinates and
