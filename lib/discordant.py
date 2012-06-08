@@ -76,6 +76,9 @@ class clusterBuild:
 # used for generating new index numbers
 def reindexReads(readlist, maxDist, eltLenDict):
     # used for keeping track of the last readpair seen for a given element class
+
+    newlist = []
+
     eltClustDict = {}
     for eltName in eltLenDict.keys():
         eltClustDict[eltName] = clusterBuild(eltName)
