@@ -173,11 +173,16 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Pipeline that aims to identify TE insertions from .bam alignments")
     parser.add_argument('-s', '--sampleFile', dest="sampleFile", required=True,
-                    help="List of filenames and sample names. Should include both .bam files (.bam) and their indexes (.bai)")
-    parser.add_argument('-c', '--config', dest='configFile', required=True)
-    parser.add_argument('-p', '--processors', dest='numCPUs', default='1', help="Number of CPUs to use (1 job per CPU)")
-    parser.add_argument('-o', '--outdir', dest='outDirName', required=True, help="output base directory")
-    parser.add_argument('--pinpointonly', action='store_true', help="only run pinpoint.py")
-    parser.add_argument('--tcga', action="store_true", help="Use TCGA filename format to determine cancer/normal pair")
+                   help="List of filenames and sample names. Should include both .bam files (.bam) and their indexes (.bai)")
+    parser.add_argument('-c', '--config', dest='configFile', required=True,
+                   help="config file, see human_sample.cfg for an example")
+    parser.add_argument('-p', '--processors', dest='numCPUs', default='1', 
+                   help="Number of CPUs to use (1 job per CPU)")
+    parser.add_argument('-o', '--outdir', dest='outDirName', required=True, 
+                   help="output base directory")
+    parser.add_argument('--pinpointonly', action='store_true', 
+                   help="only run pinpoint.py")
+    parser.add_argument('--tcga', action="store_true", 
+                   help="samples are cancer/normal pairs speficied by sample names as per TCGA spec (https://wiki.nci.nih.gov/display/TCGA/Working+with+TCGA+Data)")
     args = parser.parse_args()
     main(args)
