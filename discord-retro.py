@@ -57,8 +57,11 @@ class PairedSample:
         tabixLoc = self.config.get('discord', 'annotDir') + "/" + self.assembly + "/" + self.assembly + ".rmsk.bed.gz"
         lib.discordant.checkfile(tabixLoc)
         usechr = False
+        allowOverlap = False # for summary, include elements overlapping similar repeatmasker annotations (e.g. Alu in Alu)
         if self.config.get('discord','usechr') == "True":
             usechr = True
+        if self.config.get('discord','allowOverlap') == "True":
+            allowOverlap = True
         args = argparse.Namespace(bamFileName    = self.normalBam,  # discordant.py
                                   outBaseName    = self.name,       # discordant.py, peakparser.py, summarize.py, pinpoint.py
                                   tabixFileName  = tabixLoc,        # discordant.py
@@ -69,6 +72,7 @@ class PairedSample:
                                   inDir2         = None,            # mergepairs.py
                                   outDirName     = self.outdir,     # everything
                                   usechr         = usechr,          # pinpoint.py
+                                  allowOverlap   = allowOverlap,
                                   eltFileName    = self.config.get('discord','eltFileName'),
                                   eltLenFileName = self.config.get('discord','eltLenFileName'),
                                   readLength     = self.config.get('discord','readLength'),

@@ -139,7 +139,7 @@ def main(args):
 
     f = open(debugFile, 'r')
     for line in f: # loop over lines
-        if re.search('valid=1', line) and re.search('olClN=0', line):
+        if re.search('valid=1', line) and (re.search('olClN=0', line) or args.allowOverlap):
             insdata = {}
             for c in line.rstrip().rsplit(' '): # loop over columns
                (key,value) = c.rsplit('=')
@@ -185,6 +185,7 @@ if __name__ == '__main__':
     parser.add_argument('-a', '--annotdir', dest='annotDir', required=True,
                         help='base directory for annotations (annotation/refgenome should exist too)')
     parser.add_argument('--printout', action="store_true")
+    parser.add_argument('--allowOverlap', action="store_true")
     args = parser.parse_args()
 
     main(args)
