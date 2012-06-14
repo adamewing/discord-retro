@@ -8,9 +8,24 @@ import logging, os, re, argparse, peakparser, discordant
 def cmpChrPosList(a,b):
 
     chrA = a[0].lstrip('chr')
+    # handle X/Y
+    chrA = re.sub("X","2000",chrA)
+    chrA = re.sub("Y","3000",chrA)
+    # handle 2a/2b (chimp)
+    chrA = re.sub("2a","4000",chrA)
+    chrA = re.sub("2b","5000",chrA)
+    # handle '_random' chromosomes
+    if re.search("_random", chrA):
+        chrA = int(chrA.rstrip("_random")) + 1000
     if chrA < ':' and chrA > '0': chrA = int(chrA)
 
     chrB = b[0].lstrip('chr')
+    chrB = re.sub("X","2000",chrB)
+    chrB = re.sub("Y","3000",chrB)
+    chrB = re.sub("2a","4000",chrB)
+    chrB = re.sub("2b","5000",chrB)
+    if re.search("_random", chrB):
+        chrB = int(chrB.rstrip("_random")) + 1000
     if chrB < ':' and chrB > '0': chrB = int(chrB)
 
     posA = int(a[1])
