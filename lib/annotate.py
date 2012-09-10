@@ -48,13 +48,17 @@ class annotator:
         else:
             annotations = []
             if (chr and start and end):
-                tabixTupleParse = self.tabix.fetch(reference=chr,
-                                                   start=int(start),
-                                                   end=int(end),
-                                                   parser=pysam.asTuple())
-                for tabixTuple in tabixTupleParse:
-                    annotations.append(tabixTuple[3])
-                return uniqann(annotations)
+                try:
+                    tabixTupleParse = self.tabix.fetch(reference=chr,
+                                                       start=int(start),
+                                                       end=int(end),
+                                                       parser=pysam.asTuple())
+                    for tabixTuple in tabixTupleParse:
+                        annotations.append(tabixTuple[3])
+                    return uniqann(annotations)
+                except(ValueError):
+                    print "warning: " + chr + " is not present in reference."
+                    return []
             else:
                 raise LookupError("can't find chr,start,end. File must be tab-delimited")
                 return []

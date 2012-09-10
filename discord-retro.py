@@ -12,10 +12,11 @@ from os import path as path
 # other imports are done via pp
 
 class PairedSample:
-    def __init__(self, name, config, outdir, assembly, tcga=False, pinonly=False):
+    def __init__(self, name, config, outdir, assembly, tcga=False, pinonly=False, justcall=False):
         self.name = name
         self.tcga = tcga      # if true, changes validation, naming
         self.pinonly   = pinonly
+        self.justcall  = justcall
         self.config    = config  # ConfigParser
         self.outdir    = outdir
         self.cancerBam = None
@@ -114,7 +115,8 @@ class PairedSample:
 
         else:
             if not self.pinonly:
-                lib.discordant.main(args)
+                if not self.justcall:
+                    lib.discordant.main(args)
                 lib.peakparser.main(args)
                 lib.summarize.main(args)
             lib.pinpoint.main(args)
@@ -150,12 +152,13 @@ def main(args):
                                                          args.outDirName,
                                                          assembly,
                                                          tcga=args.tcga, 
-                                                         pinonly=args.pinpointonly)
+                                                         pinonly=args.pinpointonly,
+                                                         justcall=args.justcall)
 
             pairedSamples[sampleName].addFile(sampleType,extension,filePath)
 
     # parallel python stuff
-    ncpus = 16
+    ncpus = int(args.numCPUs) 
     jobServer = pp.Server(ncpus,ppservers=())
 
     sampleJobs = {}
@@ -188,5 +191,6 @@ if __name__ == '__main__':
                    help="only run pinpoint.py")
     parser.add_argument('--tcga', action="store_true", 
                    help="samples are cancer/normal pairs speficied by sample names as per TCGA spec (https://wiki.nci.nih.gov/display/TCGA/Working+with+TCGA+Data)")
+    parser.add_argument('--justcall', action="store_true", help="don't pick discordant reads, just call on pre-existing sample.readpairs.txt")
     args = parser.parse_args()
     main(args)

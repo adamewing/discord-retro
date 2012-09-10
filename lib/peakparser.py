@@ -174,7 +174,7 @@ def main(args):
     configDict = readConfig(configPath,args.outBaseName,args.outDirName)
 
     # debugging info
-    logfile = args.outDirName + "/" + args.outBaseName + "logs/%d" % os.getpid() + "." + args.outBaseName +".peakparser.log"
+    logfile = args.outDirName + "/" + args.outBaseName + "/logs/%d" % os.getpid() + "." + args.outBaseName +".peakparser.log"
     logging.basicConfig(format='%(asctime)s %(message)s',filename=logfile,level=logging.DEBUG)
 
     # log parameters
