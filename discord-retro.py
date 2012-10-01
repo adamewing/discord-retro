@@ -94,7 +94,7 @@ class PairedSample:
             mergeName  = self.name + "-MERGE"
 
             args.inDir1 = normalName
-            arge.inDir2 = cancerName
+            args.inDir2 = cancerName
             args.outBaseName = normalName
             # normal .bam
             lib.discordant.main(args)
