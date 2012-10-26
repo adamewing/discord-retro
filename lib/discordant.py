@@ -183,26 +183,15 @@ def main(args):
             readChrName = fixChrName(bamFile.getrname(read.tid))
             mateChrName = fixChrName(bamFile.getrname(read.mrnm))
 
-            tabixTupleParse = None
-            tabixMateTupleParse = None
-
             # fetch() using the pysam.asTuple parser returns tabix results as a tuple
             if tabixRefs.has_key(readChrName) and tabixRefs.has_key(mateChrName):
-                tabixTupleParse = tabixFile.fetch(reference=readChrName, 
-                                                  start=read.pos, 
-                                                  end=read.pos+1, 
-                                                  parser=pysam.asTuple())
+                for tabixRow in tabixFile.fetch(reference=readChrName, start=read.pos, end=read.pos+1):
+                    t = tabixRow.strip().split()
+                    readElt = t[3]
 
-                tabixMateTupleParse = tabixFile.fetch(reference=mateChrName, 
-                                                      start=read.mpos, 
-                                                      end=read.mpos+1, 
-                                                      parser=pysam.asTuple())
-
-            if tabixTupleParse:
-                for tabixTuple in tabixTupleParse:
-                    readElt = tabixTuple[3]
-                for tabixMateTuple in tabixMateTupleParse:
-                    mateElt = tabixMateTuple[3]
+                for tabixMateRow in tabixFile.fetch(reference=mateChrName, start=read.mpos, end=read.mpos+1):
+                    tm = tabixMateRow.strip().split()
+                    mateElt = tm[3]
 
                 # For a given read pair, add it to the set if a read's mate matches an 
                 # annotation in the element dictionary, and the read itself is either 
@@ -220,10 +209,10 @@ def main(args):
                     if read.is_reverse:      readStrand = '-'
                     if read.mate_is_reverse: mateStrand = '-'
 
-                    eltStart   = int(tabixMateTuple[1])
-                    eltEnd     = int(tabixMateTuple[2])
-                    eltDiverge = tabixMateTuple[4]
-                    eltStrand  = tabixMateTuple[5]
+                    eltStart   = int(tm[1])
+                    eltEnd     = int(tm[2])
+                    eltDiverge = tm[4]
+                    eltStrand  = tm[5]
 
                     if (readChrName == eltClustDict[eltClass].lastChr):
                         if (read.pos - eltClustDict[eltClass].lastPos < 0): # sanity check
