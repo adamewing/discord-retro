@@ -34,15 +34,14 @@ def checkRmskDict(tabixFile,eltDict,eltClass,chr,start,end):
        tmp   = start
        start = end
        end   = tmp
-    tabixTupleParse = tabixFile.fetch(reference=chr, start=start, end=end, parser=pysam.asTuple())
-    if tabixTupleParse:
-        for tabixTuple in tabixTupleParse:
-            eltName = tabixTuple[3]
-            if eltClass == 'All': # match anything
+    for tabixRecord in tabixFile.fetch(reference=chr, start=start, end=end):
+        t = tabixRecord.strip().split()
+        eltName = t[3]
+        if eltClass == 'All': # match anything
+            return True
+        else:
+            if eltDict.has_key(eltName) and eltDict[eltName] == eltClass:
                 return True
-            else:
-                if eltDict.has_key(eltName) and eltDict[eltName] == eltClass:
-                    return True
     return False
 
 def longOutput(eltPeakDict,outBaseName,outDirName,tabixFile,eltDict):
