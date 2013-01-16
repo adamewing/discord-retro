@@ -12,9 +12,10 @@ from os import path as path
 # other imports are done via pp
 
 class PairedSample:
-    def __init__(self, name, config, outdir, assembly, tcga=False, pinonly=False, justcall=False):
+    def __init__(self, name, config, outdir, assembly, tcga=False, grouped=False, pinonly=False, justcall=False):
         self.name = name
         self.tcga = tcga      # if true, changes validation, naming
+        self.grouped = grouped # requires field 4 in sample file be filled for all samples
         self.pinonly   = pinonly
         self.justcall  = justcall
         self.config    = config  # ConfigParser
@@ -24,6 +25,10 @@ class PairedSample:
         self.cancerIdx = None
         self.normalIdx = None 
         self.assembly  = assembly 
+
+        self.groupBams  = []
+        self.groupIdxs  = []
+        self.groupNames = []
 
     def __str__(self):
         return "\t".join((str(self.cancerBam),str(self.normalBam),
@@ -38,6 +43,16 @@ class PairedSample:
                 return True
             else:
                 return False
+
+        elif self.grouped:
+            for bam in self.groupBams:
+                if not path.exists(bam):
+                    return False
+            for idx in self.groupIdxs:
+                if not path.exists(idx):
+                    return False
+            return True
+
         else:
             if (self.normalBam and path.exists(self.normalBam) and
                 self.normalIdx and path.exists(self.normalIdx)):
@@ -52,6 +67,12 @@ class PairedSample:
         if sampleType == 'CANCER' and extension == 'bam':
             self.cancerBam = filePath
             self.cancerIdx = filePath + ".bai"
+
+    def addGroupFile(self,name,filePath):
+        assert name not in self.groupNames
+        self.groupNames.append(name)
+        self.groupBams.append(filePath)
+        self.groupIdxs.append(filePath + ".bai")
 
     def runDiscordant(self):
         """Runs discordant.py, peakparser.py, summarize,py, pinpoint.py"""
@@ -71,6 +92,7 @@ class PairedSample:
                                   printout       = False,           # summarize.py
                                   inDir1         = None,            # mergepairs.py
                                   inDir2         = None,            # mergepairs.py
+                                  sampleList     = None,            # mergelist.py
                                   outDirName     = self.outdir,     # everything
                                   usechr         = usechr,          # pinpoint.py
                                   allowOverlap   = allowOverlap,
@@ -113,6 +135,23 @@ class PairedSample:
                 lib.summarize.main(args)
             lib.pinpoint.main(args)
 
+        elif self.grouped:
+            sampleList = []
+            for i in range(len(self.groupNames)):
+                sampleString = "\t".join((self.groupBams[i], self.groupNames[i], self.assembly))
+                sampleList.append(sampleString)
+                args.outBaseName = self.groupNames[i]
+                args.bamFileName = self.groupBams[i]
+                lib.discordant.main(args)
+
+            args.outBaseName = self.name
+            args.sampleList = sampleList
+            lib.mergelist.main(args)
+            if not self.pinonly:
+                lib.peakparser.main(args)
+                lib.summarize.main(args)
+            lib.pinpoint.main(args)
+
         else:
             if not self.pinonly:
                 if not self.justcall:
@@ -128,7 +167,16 @@ def main(args):
 
     for line in open(args.sampleFile, 'r'):
         if not re.search("^#", line):
-            (filePath,label,assembly) = line.strip().split()
+            filePath = label = assembly = groupname = None
+
+            ncols = len(line.strip().split())
+            if ncols == 3: 
+                (filePath,label,assembly) = line.strip().split()
+            elif ncols == 4:
+                (filePath,label,assembly,groupName) = line.strip().split()
+
+            assert filePath and label and assembly
+
             base = path.basename(filePath)
 
             sampleType = 'NORMAL'
@@ -147,15 +195,28 @@ def main(args):
             config = ConfigParser.ConfigParser()
             config.read(args.configFile)
 
-            if sampleName not in pairedSamples:
-                pairedSamples[sampleName] = PairedSample(sampleName,config, 
-                                                         args.outDirName,
-                                                         assembly,
-                                                         tcga=args.tcga, 
-                                                         pinonly=args.pinpointonly,
-                                                         justcall=args.justcall)
+            if args.grouped:
+                if groupName not in pairedSamples:
+                    pairedSamples[groupName] = PairedSample(groupName,config, 
+                                                             args.outDirName,
+                                                             assembly,
+                                                             tcga=args.tcga, 
+                                                             grouped=args.grouped,
+                                                             pinonly=args.pinpointonly,
+                                                             justcall=args.justcall)
+                pairedSamples[groupName].addGroupFile(sampleName,filePath)
 
-            pairedSamples[sampleName].addFile(sampleType,extension,filePath)
+            else:
+                if sampleName not in pairedSamples:
+                    pairedSamples[sampleName] = PairedSample(sampleName,config, 
+                                                             args.outDirName,
+                                                             assembly,
+                                                             tcga=args.tcga, 
+                                                             pinonly=args.pinpointonly,
+                                                             justcall=args.justcall)
+
+                pairedSamples[sampleName].addFile(sampleType,extension,filePath)
+            
 
     # parallel python stuff
     ncpus = int(args.numCPUs) 
@@ -166,7 +227,7 @@ def main(args):
         if pairedSamples[sampleName].validate():
             print sampleName + " validated"
             job = jobServer.submit(pairedSamples[sampleName].runDiscordant,(),(),
-                  ("lib.discordant","lib.mergepairs","lib.peakparser","lib.pinpoint","lib.summarize","argparse"))
+                  ("lib.discordant","lib.mergepairs","lib.mergelist","lib.peakparser","lib.pinpoint","lib.summarize","argparse"))
             sampleJobs[sampleName] = job
             print "started job: " + sampleName
             jobServer.print_stats()
@@ -191,6 +252,7 @@ if __name__ == '__main__':
                    help="only run pinpoint.py")
     parser.add_argument('--tcga', action="store_true", 
                    help="samples are cancer/normal pairs speficied by sample names as per TCGA spec (https://wiki.nci.nih.gov/display/TCGA/Working+with+TCGA+Data)")
+    parser.add_argument('--grouped', action="store_true", help="samples are grouped by name in column 4 of sample file")
     parser.add_argument('--justcall', action="store_true", help="don't pick discordant reads, just call on pre-existing sample.readpairs.txt")
     args = parser.parse_args()
     main(args)

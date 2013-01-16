@@ -85,9 +85,13 @@ def main(args):
     # create output directory
     discordant.prepOutDir(args.outBaseName,args.outDirName,args.overwrite)
 
-    discordant.checkfile(args.sampleListFile)
+    sampleList = [] 
 
-    sampleList = open(args.sampleListFile, 'r')
+    if not args.sampleList:
+        discordant.checkfile(args.sampleListFile)
+        sampleList = open(args.sampleListFile, 'r')
+    else:
+        sampleList = args.sampleList
 
     readFileNames = []
     bamFileNames  = []
