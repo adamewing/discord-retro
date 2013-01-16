@@ -95,6 +95,7 @@ def main(args):
 
     readFileNames = []
     bamFileNames  = []
+    sampleNames   = []
     insertSizes   = []
     readLengths   = []
     eltLenDict    = None
@@ -117,6 +118,7 @@ def main(args):
             readFileName = args.outDirName + "/" + sampleSubDir + "/" + sampleSubDir + ".readpairs.txt"
             readFileNames.append(readFileName)
             bamFileNames.append(configDict['bamFileName'])
+            sampleNames.append(sampleSubDir)
 
     maxDist = max(insertSizes) + 2*max(readLengths)        
 
@@ -128,11 +130,19 @@ def main(args):
     configPath = args.outDirName + "/" + args.outBaseName + "/" + args.configFileName
     configDict = lastConfig
 
+    assert len(bamFileNames) == len(sampleNames)
+
     bfnum = 0
     for bamFileName in bamFileNames:
         bfvname = "bamFileName" + str(bfnum)
         configDict[bfvname] = bamFileName
         bfnum += 1
+
+    snum = 0
+    for sampleName in sampleNames:
+        samname = "sampleName" + str(snum)
+        configDict[samname] = sampleName
+        snum += 1
 
     configDict['merged'] = 'True'
     configDict['outBaseName'] = args.outBaseName

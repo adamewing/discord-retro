@@ -150,7 +150,7 @@ class PairedSample:
             if not self.pinonly:
                 lib.peakparser.main(args)
                 lib.summarize.main(args)
-            lib.pinpoint.main(args)
+            lib.multipoint.main(args)
 
         else:
             if not self.pinonly:
@@ -227,7 +227,7 @@ def main(args):
         if pairedSamples[sampleName].validate():
             print sampleName + " validated"
             job = jobServer.submit(pairedSamples[sampleName].runDiscordant,(),(),
-                  ("lib.discordant","lib.mergepairs","lib.mergelist","lib.peakparser","lib.pinpoint","lib.summarize","argparse"))
+                  ("lib.discordant","lib.mergepairs","lib.mergelist","lib.peakparser","lib.multipoint","lib.pinpoint","lib.summarize","argparse"))
             sampleJobs[sampleName] = job
             print "started job: " + sampleName
             jobServer.print_stats()
