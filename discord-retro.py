@@ -167,7 +167,7 @@ def main(args):
 
     for line in open(args.sampleFile, 'r'):
         if not re.search("^#", line):
-            filePath = label = assembly = groupname = None
+            filePath = label = assembly = groupName = None
 
             ncols = len(line.strip().split())
             if ncols == 3: 
