@@ -15,8 +15,8 @@ def cmpChrPosList(a,b):
     chrA = re.sub("2a","4000",chrA)
     chrA = re.sub("2b","5000",chrA)
     # handle '_random' chromosomes
-    if re.search("_random", chrA):
-        chrA = int(chrA.rstrip("_random")) + 1000
+    if re.search("_", chrA):
+        chrA = int(re.sub('_.*','',chrA)) + 1000
     if chrA < ':' and chrA > '0': chrA = int(chrA)
 
     chrB = b[0].lstrip('chr')
