@@ -87,11 +87,11 @@ def main(args):
 
     sampleList = [] 
 
-    if not args.sampleList:
-        discordant.checkfile(args.sampleListFile)
-        sampleList = open(args.sampleListFile, 'r')
-    else:
+    try:
         sampleList = args.sampleList
+    except AttributeError:
+        discordant.checkfile(args.sampleListFile)
+        sampleList = open(args.sampleListFile, 'r') 
 
     readFileNames = []
     bamFileNames  = []
@@ -103,7 +103,7 @@ def main(args):
 
     for sampleLine in sampleList:
         if not re.search("^#", sampleLine):
-            (sampleBam,sampleSubDir,refGenome) = sampleLine.strip().split()
+            (sampleBam,sampleSubDir,refGenome,groupName) = sampleLine.strip().split()
             peakparser.checkOutDir(sampleSubDir,args.outDirName)
             configPath = args.outDirName + "/" + sampleSubDir + "/" + args.configFileName
 
