@@ -11,6 +11,7 @@ def cmpChrPosList(a,b):
     # handle X/Y
     chrA = re.sub("X","2000",chrA)
     chrA = re.sub("Y","3000",chrA)
+    chrA = re.sub("Un","6000",chrA)
     # handle 2a/2b (chimp)
     chrA = re.sub("2a","4000",chrA)
     chrA = re.sub("2b","5000",chrA)
@@ -24,6 +25,7 @@ def cmpChrPosList(a,b):
     chrB = re.sub("Y","3000",chrB)
     chrB = re.sub("2a","4000",chrB)
     chrB = re.sub("2b","5000",chrB)
+    chrB = re.sub("Un","6000",chrB)
     if re.search("_", chrB):
         chrB = int(re.sub('_.*','',chrB)) + 1000
     if chrB < ':' and chrB > '0': chrB = int(chrB)
