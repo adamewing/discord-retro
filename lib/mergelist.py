@@ -24,7 +24,7 @@ def cmpChrPosList(a,b):
     chrB = re.sub("Y","3000",chrB)
     chrB = re.sub("2a","4000",chrB)
     chrB = re.sub("2b","5000",chrB)
-    if re.search("_random", chrB):
+    if re.search("_", chrB):
         chrB = int(re.sub('_.*','',chrB)) + 1000
     if chrB < ':' and chrB > '0': chrB = int(chrB)
 
