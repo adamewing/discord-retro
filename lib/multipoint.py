@@ -563,9 +563,9 @@ def main(args):
             mergedCluster = fetchRegion(bamPysams[0],refGenome,int(args.maxReadLen),chr,start,end,args.zeroChar,int(args.minClipQual),args.usechr)
             mergedCluster.type=sampleNames[0]
 
-            for i in range(1,len(bamPysams)):
-                nextCluster = fetchRegion(bamPysams[i],refGenome,int(args.maxReadLen),chr,start,end,args.zeroChar,int(args.minClipQual),args.usechr)
-                nextCluster.type=sampleNames[i]
+            for p in range(1,len(bamPysams)):
+                nextCluster = fetchRegion(bamPysams[p],refGenome,int(args.maxReadLen),chr,start,end,args.zeroChar,int(args.minClipQual),args.usechr)
+                nextCluster.type=sampleNames[p]
                 mergedCluster = mergeClusters(mergedCluster,nextCluster,args.refFastaDir)
 
             clusterout = mergedCluster.outstring()
