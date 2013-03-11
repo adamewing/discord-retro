@@ -138,7 +138,7 @@ class PairedSample:
         elif self.grouped:
             sampleList = []
             for i in range(len(self.groupNames)):
-                sampleString = "\t".join((self.groupBams[i], self.groupNames[i], self.assembly))
+                sampleString = "\t".join((self.groupBams[i], self.groupNames[i], self.assembly, self.name))
                 sampleList.append(sampleString)
                 args.outBaseName = self.groupNames[i]
                 args.bamFileName = self.groupBams[i]
